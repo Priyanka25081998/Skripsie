@@ -51,21 +51,9 @@ namespace {
 }
 
 void setup() {
-  Serial.begin(9600);
-  while (!Serial) ; 
   SerialGPS.begin(9600);
-  Serial.println("Waiting for GPS time ... ");
-  //SD Initialization
-   if (!SD.begin(chipSelect)) {
-    Serial.println("SD initialization failed");
-    return;
-  }
-  Serial.println("SD initialization success");
+  SD.begin(chipSelect);
   tempsensor.begin();
-  if (!tempsensor.begin()) {
-    Serial.println("Couldn't find ADT7410!");
-    while (1);
-  }
   
   CCM_CSCMR1 &= ~CCM_CSCMR1_PERCLK_CLK_SEL; 
   CCM_CCGR1 |= CCM_CCGR1_GPT(CCM_CCGR_ON) ;  
@@ -108,16 +96,6 @@ void setup() {
   model_input = interpreter->input(0);
   model_output = interpreter->output(0);
 
-#if DEBUG
-  Serial.print("Number of dimensions: ");
-  Serial.println(model_input->dims->size);
-  Serial.print("Dim 1 size: ");
-  Serial.println(model_input->dims->data[0]);
-  Serial.print("Dim 2 size: ");
-  Serial.println(model_input->dims->data[1]);
-  Serial.print("Input type: ");
-  Serial.println(model_input->type);
-#endif
 }
 
 void loop() {
